@@ -27,6 +27,26 @@ app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { shortURL: req.params.shortURL, longURL: /* What goes here? */req.params.longURL };
     res.render("urls_show", templateVars);
   });
+
+  app.post("/urls/:shortURL/delete", (req, res) => {
+    const shortURL = req.params.shortURL;
+    const longURL = req.body.longURL;
+    //const userID = req.session["user_id"];
+    // if (!userID) {
+    //   res.status(401).send("401 Must be logged in");
+    // }
+    // if (userID && userID === urlDatabase[shortURL].userID) {
+    //   delete urlDatabase[shortURL];
+  
+    //   res.redirect("/urls");
+    // } else {
+    //   res.status(403).send("403 You are not authorized");
+    // }
+  
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls")
+  })
+
 app.get("/urls", (req, res) => {
     const templateVars = { urls: urlDatabase };
     res.render("urls_index", templateVars);
