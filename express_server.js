@@ -6,6 +6,18 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+
+function generateRandomString() {
+
+}
+
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.get("/urls/new", (req, res) => {
+    res.render("urls_new");
+  });
 app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { shortURL: req.params.shortURL, longURL: /* What goes here? */req.params.longURL };
     res.render("urls_show", templateVars);
@@ -31,6 +43,11 @@ app.get("/urls.json", (req, res) => {
    app.get("/fetch", (req, res) => {
     res.send(`a = ${a}`);
    });
+
+   app.post("/urls", (req, res) => {
+    console.log(req.body);  // Log the POST request body to the console
+    res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
