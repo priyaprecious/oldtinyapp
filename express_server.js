@@ -1,5 +1,7 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
 const app = express();
+app.use(cookieParser())
 const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 const urlDatabase = {
@@ -11,9 +13,10 @@ const urlDatabase = {
 function generateRandomString() {
 
 }
-
 const bodyParser = require("body-parser");
+
 app.use(bodyParser.urlencoded({extended: true}));
+
 app.get("/u/:shortURL", (req, res) => {
     // const longURL = ...
     const longURL = urlDatabase[req.params.shortURL];
@@ -46,11 +49,39 @@ app.get("/urls/:shortURL", (req, res) => {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls")
   })
-
+  app.post("/login", (req, res) => {
+      const username = req.body.username;
+      res.cookie("username" , username);
+ console.log(req.cookies.username);
+    // const email = req.body.email;
+    // const password = req.body.password;
+  
+    // if (!email || !password) {
+    //   res.status(400).send("400 Email and password fields cannot be empty");
+    // }
+    // if (!findUserByEmail(email, users) || !emailMatchPass(email, password, users)) {
+    //   res.status(403).send("403 Email or Password are incorrect");
+    //   //if email exits & password is correct
+    // } else {
+    //   const newId = authenticateUser(users, email, password);
+    //   console.log(users, email, password);
+    //   req.session["user_id"] = newId;
+  
+      res.redirect("/urls");
+   // }
+  });
+// app.post("/logout", (req,res) => {
+//     res.clearCookie("username");
+//     res.redirect("/urls")
+// })
 app.get("/urls", (req, res) => {
-    const templateVars = { urls: urlDatabase };
+    //console.log(req.)
+    const templateVars = { urls: urlDatabase};
+    
     res.render("urls_index", templateVars);
   });
+  
+  //res.render("urls_index", templateVars);
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
