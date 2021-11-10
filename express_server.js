@@ -47,6 +47,33 @@ app.get("/urls/:shortURL", (req, res) => {
     res.redirect("/urls")
   })
 
+  app.post("/urls/:shortURL", (req, res) => {
+    const shortURL = req.params.shortURL;
+    const longURL = req.body.longURL;
+
+    if (urlDatabase[req.params.shortURL]) {
+        urlDatabase[req.params.shortURL] = req.body.longURL;
+        res.redirect('/urls');
+    }
+    //const userID = req.session["user_id"];
+    // if (!userID) {
+    //   res.status(401).send("401 Must be logged in");
+    // }
+    // if (userID && userID === urlDatabase[shortURL].userID) {
+  
+    //    urlDatabase[shortURL] = {
+    //      longURL: longURL,
+    //      //userID: userID
+    //    };
+    //    res.redirect("/urls");
+    // } else {
+    //   res.status(403).send("403 You are not authorized");
+    // }
+
+    
+  
+  })
+
 app.get("/urls", (req, res) => {
     const templateVars = { urls: urlDatabase };
     res.render("urls_index", templateVars);
