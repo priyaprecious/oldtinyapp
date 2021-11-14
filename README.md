@@ -4,9 +4,20 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 
+### Login page
 !["Login page"](https://github.com/priyaprecious/tinyapp/blob/master/docs/login_page.png)
 
-!["Register Page"](https://github.com/priyaprecious/tinyapp/blob/master/docs/register_page.png)
+### Register page
+!["Register page"](https://github.com/priyaprecious/tinyapp/blob/master/docs/register_page.png)
+
+### Create New URL page
+!["Create New URL page"](https://github.com/priyaprecious/tinyapp/blob/master/docs/Create_new_url.png)
+
+### URLs page
+!["URLs page"](https://github.com/priyaprecious/tinyapp/blob/master/docs/User_logged_in.png)
+
+### Edit URL page
+!["Edit URL page"](https://github.com/priyaprecious/tinyapp/blob/master/docs/edit_url.png)
 
 ## Dependencies
 
