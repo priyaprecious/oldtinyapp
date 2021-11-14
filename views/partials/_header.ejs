@@ -10,5 +10,14 @@
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         </div>
       </div>
+      
+      <% if(usr) { %>
+        <a class="navbar-brand" href="#">Logged in As: <%= usr.email %> </a>
+        <a type='button' href="/logout" class="btn btn-primary">Logout</a>
+      <% } else { %>
+        <a class="navbar-brand" href="/register">Register</a>
+        <a class="navbar-brand" href="/user_login">Login</a>
+        <% } %>  
+      
     </nav>
   </header>
