@@ -88,17 +88,14 @@ app.get("/user_login", (req, res) => {
 
 app.post('/user_login', (req,res) => {
     const user = req.body;
-    //console.log(user);
+   
 
     if (emailCheck(user.email)) {
-        //console.log("returned true");
         const userID = getUserId(user.email);
         const psswd = user.password;
         const hashedPass = users[userID]['password'];
-        //console.log(hashedPass);
 
         if(bcrypt.compareSync(psswd, hashedPass)) {
-            //console.log("problem");
             const errMsg = {
                 errTitle: "Invalid Credentials",
                 errDes: "Invalid User or Password, please try again",
@@ -119,22 +116,6 @@ app.post('/user_login', (req,res) => {
     }
 });
 
-// app.post("/user_login", (req, res) => {
-//     const { email, password } = req.body;
-//     const { error } = emailCheck(email);
-//     if (!error) {
-//     //   res.status(400).send(`Not an User Try again <a href ='user_login'> Login </a>`);
-
-//     } else {
-//       const user = getUserByEmail(email);
-//       if (!bcrypt.compareSync(password, user.password)) {
-//         res.status(400).send("Invalid Password");
-//       }
-//       req.session.user_id = user["id"];
-//       res.redirect("/urls");
-//     }
-//   });
-
 //------------------ User logout ---------------------------
 
 app.get('/logout', (req, res) => {
@@ -153,36 +134,14 @@ app.get('/logout', (req, res) => {
         urlDatabase[req.params.shortURL] = req.body.longURL;
         res.redirect('/urls');
     }
-    //const userID = req.session["user_id"];
-    // if (!userID) {
-    //   res.status(401).send("401 Must be logged in");
-    // }
-    // if (userID && userID === urlDatabase[shortURL].userID) {
-  
-    //    urlDatabase[shortURL] = {
-    //      longURL: longURL,
-    //      //userID: userID
-    //    };
-    //    res.redirect("/urls");
-    // } else {
-    //   res.status(403).send("403 You are not authorized");
-    // }
-
-    
-  
   })
 
 app.get("/urls", (req, res) => {
-
     const usrCookie = req.session.user_id;
-    console.log(usrCookie);
     const usr = users[usrCookie];
-    console.log(usr,"user cookie on urls page");
 
     if (usr) {
-       // console.log(usr.email);
         const allowURLs = urlsForUser(usrCookie);
-        //console.log(allowURLs);
         const templateVars = {
             urls: allowURLs,
             usr
@@ -191,14 +150,10 @@ app.get("/urls", (req, res) => {
     } else {
         res.status(403).redirect("/user_login");
     }
-    // const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
-    // console.log(req.cookies.username);
-    // res.render("urls_index", templateVars);
 });
 
 app.post("/urls", (req, res) => {
     const usrCookie = req.session.user_id;
-console.log("request received",usrCookie);
     if (!usrCookie) {
         const errMsg = {
             errTitle: "Access Denied",
@@ -213,7 +168,6 @@ console.log("request received",usrCookie);
         urlDatabase[shortURL] = {};
         urlDatabase[shortURL]['longURL'] = longURL;
         urlDatabase[shortURL]['userID'] = usrCookie;
-        console.log(urlDatabase);
 
         res.redirect(`/urls/${shortURL}`);
     }
@@ -234,13 +188,17 @@ app.get("/u/:shortURL", (req, res) => {
     if (shortURL in urlDatabase) {
         const longURL = urlDatabase[shortURL]['longURL'];
         res.redirect(longURL);
+    } else {
+        const errMsg = {
+            errTitle: "Invalid shortURL",
+            errDes: "Please give a valid shortURL",
+            route: "user_login"
+        }
+        res.status(403).render("error_page", errMsg);
     }
 });
 
 app.get("/urls/new", (req, res) => {
-    // const username=req.cookies["username"];
-    // const templateVars={username:username}
-    // res.render("urls_new",templateVars);
     if (!req.session.user_id) {
         const errMsg = {
             errTitle: "Access Denied",
@@ -260,14 +218,12 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
     const usrCookie = req.session.user_id;
-    console.log(usrCookie);
     const usr = users[usrCookie];
     const shortURL = req.params.shortURL;
     
     //const allowURLs = urlsForUser(usr.email);
 
     if (!usrCookie) {
-        console.log("2");
         const errMsg = {
             errTitle: "Access Denied",
             errDes: "Please login and try again",
@@ -326,9 +282,6 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.get("/u/:shortURL", (req,res) => {
-    // const templateVars = {username:req.cookies["username"]};
-    // const longURL = urlDatabase[req.params.shortURL];
-    // res.redirect(longURL,templateVars);
     const shortURL = req.params.shortURL;
     if (shortURL in urlDatabase) {
         const longURL = urlDatabase[shortURL]['longURL'];
@@ -372,83 +325,3 @@ app.post('/urls/:id/delete', (req, res) => {
       res.status(403).render('error_page', errMsg);
     }
 });
-// app.get("/hello", (req, res) => {
-//     res.send("<html><body>Hello <b>World</b></body></html>\n");
-// });
-// app.get("/urls", (req, res) => {
-//     //console.log(req.)
-//     const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
-//     console.log(req.cookies.username);
-//     res.render("urls_index", templateVars);
-// });
-
-
-// app.post("/urls/:shortURL/delete", (req, res) => {
-//     const shortURL = req.params.shortURL;
-//     const longURL = req.body.longURL;
-//     //const userID = req.session["user_id"];
-//     // if (!userID) {
-//         //   res.status(401).send("401 Must be logged in");
-//         // }
-//         // if (userID && userID === urlDatabase[shortURL].userID) {
-//             //   delete urlDatabase[shortURL];
-            
-//             //   res.redirect("/urls");
-//             // } else {
-//                 //   res.status(403).send("403 You are not authorized");
-//                 // }
-                
-//    delete urlDatabase[req.params.shortURL];
-//                 res.redirect("/urls")
-//             }); 
-//              app.post("/user_login", (req, res) => {
-//                             const username = req.body.username;
-//                             res.cookie("username", username);
-//                             // const email = req.body.email;
-//                             // const password = req.body.password;
-                            
-//                             // if (!email || !password) {
-//                                 //   res.status(400).send("400 Email and password fields cannot be empty");
-//                                 // }
-//                                 // if (!findUserByEmail(email, users) || !emailMatchPass(email, password, users)) {
-//                                     //   res.status(403).send("403 Email or Password are incorrect");
-//                                     //   //if email exits & password is correct
-//                                     // } else {
-//                                         //   const newId = authenticateUser(users, email, password);
-//                                         //   console.log(users, email, password);
-//                                         //   req.session["user_id"] = newId;
-                                        
-//                                         res.redirect("/urls");
-//                                         // }
-//                                     });
-//                                     app.post("/logout", (req, res) => {
-//                                         res.clearCookie("username");
-//                                         res.redirect("/urls")
-//                                     })
-//                                     //   app.post("/register", (req, res) => {
-//                                         // res.redirect("/urls")
-//                                         //   })
-//                                         //res.render("urls_index", templateVars);
-//                                         app.get("/set", (req, res) => {
-//                                             const a = 1;
-//                                             res.send(`a = ${a}`);
-//                                         });
-                                        
-//                                         app.get("/fetch", (req, res) => {
-//                                             res.send(`a = ${a}`);
-//                                         });
-                                        
-//                                         app.post("/urls", (req, res) => {
-//                                             console.log(req.body);  // Log the POST request body to the console
-//                                             res.send("Ok");         // Respond with 'Ok' (we will replace this)
-//                                         });
-                                        
-//  function generateRandomString(length) {
-//     var result   = ''; 
-//         var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; 
-//             var charactersLength = characters.length;     
-//             for ( var i = 0; i < length; i++ ) {    
-//                    result += characters.charAt(Math.floor(Math.random() *   charactersLength));  
-//                   }  
-//                     return result;
-//   }

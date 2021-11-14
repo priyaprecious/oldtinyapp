@@ -39,11 +39,8 @@ const getUserByEmail = (email) => {
 };
 
 const urlsForUser = (userID) => {
-  //console.log(userID);
   const authorizedURLs = {};
   for (const url in urlDB) {
-    //console.log(url);
-    //console.log(urlDB[url].userID);
     if (urlDB[url].userID === userID) {
       authorizedURLs[url] = urlDB[url];
     }
